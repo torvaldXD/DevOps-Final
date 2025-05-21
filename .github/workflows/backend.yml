@@ -1,0 +1,58 @@
+name: Backend CI
+
+on: 
+    push:
+        branches: [main, develop]
+    pull_request:
+        branches: [main, develop]
+
+jobs:
+    lint:
+        name: Lint backend 
+        runs-on: ubuntu-latest
+
+        defaults:
+            run:
+                working-directory: backend
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                node-version: '20'
+            - run: npm ci
+            - run: npm run lint
+    test:
+        name: Test backend
+        runs-on: ubuntu-latest
+        needs: lint
+
+        defaults:
+            run:
+                working-directory: backend
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                node-version: '20'
+            - run: npm ci
+            - run: npm run test
+            - name: Upload coverage
+              uses: actions/upload-artifact@v4
+              with:
+                name: backend-coverage
+                path: backend/coverage
+    build:
+        name: Build Backend
+        runs-on: ubuntu-latest
+        needs: test
+        if: github.ref == 'refs/heads/main'
+
+        defaults:
+            run:
+                working-directory: backend
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                node-version: '20'
+            - run: npm ci
