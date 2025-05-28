@@ -42,13 +42,13 @@ describe('userController', () => {
     expect(res.json).toHaveBeenCalledWith({ user: fakeUser });
   });
 
-  it('should return 400 status if user creation fails', async () => {
+  it('should return 400 status for invalid user data', async () => {
     const req = {
       body: {
-        name: 'Jane Doe',
-        email: 'jane@example.com',
-        password: '123456',
-        role: 'user',
+        name: 'Jo',
+        email: 'invalid-email',
+        password: '123',
+        role: 'guest',
       },
     };
 
@@ -58,12 +58,44 @@ describe('userController', () => {
     };
 
     await createUser(req, res);
+
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
       error: expect.arrayContaining([
-        expect.stringContaining('fails to match the required pattern'),
+        expect.stringContaining('"name" length must be at least 3 characters'),
+        expect.stringContaining('"email" must be a valid email'),
+        expect.stringContaining('"password" length must be at least 6 characters long'),
+        expect.stringContaining('"password" with value "123" fails to match the required pattern'),
+        expect.stringContaining('"role" must be one of [user, admin]'),
       ]),
+      details: expect.any(Array),
     }));
     expect(User.create).not.toHaveBeenCalled();
+  });
+
+  it('should return 500 status when database fails', async () => {
+    const mockError = new Error('Database connection failed');
+    User.create = jest.fn().mockRejectedValue(mockError);
+
+    const req = {
+      body: {
+        name: 'Valid Name',
+        email: 'valid@email.com',
+        password: 'validPassword123',
+        role: 'user',
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await createUser(req, res);
+
+    expect(User.create).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      error: 'Error creating user',
+    });
   });
 });
