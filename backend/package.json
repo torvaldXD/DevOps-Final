@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "test": "echo \"(placeholder) no tests defined yet\" && exit 0",
+    "test": "jest --coverage",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
