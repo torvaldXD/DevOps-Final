@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const AppCard = ({pokemonName}) => {
-    const [pokemon, setPokemon] = useState()
+    const [pokemon, setPokemon] = useState();
 
     useEffect(() => {
       // Obtener un Pokémon individual (por nombre o ID)

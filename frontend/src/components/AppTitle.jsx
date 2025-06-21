@@ -6,6 +6,6 @@ const AppTitle = ()=>{
         <h2>PokeDesk</h2>
         </>
     );
-}
+};
 
 export default AppTitle;
