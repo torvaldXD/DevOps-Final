@@ -2,7 +2,7 @@ const cors = require('cors');
 const express = require('express');
 const morgan = require('morgan');
 const config = require('./config/config');
-const db = require('./models');
+const { testConnection } = require('./config/sequelize');
 
 const app = express();
 
@@ -12,17 +12,20 @@ app.use(morgan(config.env === 'development' ? 'dev' : 'short'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.send('¡Hola, mundo! El servidor está funcionando correctamente.');
+});
+async function startServer() {
+  await testConnection();
+
+  const PORT = process.env.PORT || 3005;
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  });
+}
+
 if (process.env.NODE_ENV !== 'test') {
-  db.sequelize.sync()
-    .then(() => {
-      console.log('Database connected');
-      const port = app.get('port');
-      app.listen(port, () => {
-        console.log(`Server running on port ${port}`);
-      });
-    }).catch((err) => {
-      console.error('Error starting server:', err);
-    });
+  startServer();
 }
 
 module.exports = app;
