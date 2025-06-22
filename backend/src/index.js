@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const config = require('./config/config');
 const { testConnection } = require('./config/sequelize');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
@@ -15,6 +16,9 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('¡Hola, mundo! El servidor está funcionando correctamente.');
 });
+
+app.use('/api/v1/users', userRoutes);
+
 async function startServer() {
   await testConnection();
 
