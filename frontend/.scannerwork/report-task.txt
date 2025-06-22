@@ -2,5 +2,5 @@ projectKey=devops_final
 serverUrl=http://localhost:9000
 serverVersion=25.6.0.109173
 dashboardUrl=http://localhost:9000/dashboard?id=devops_final
-ceTaskId=77eafc49-2d0f-4a0a-b532-fb05783c31ac
-ceTaskUrl=http://localhost:9000/api/ce/task?id=77eafc49-2d0f-4a0a-b532-fb05783c31ac
+ceTaskId=d436da76-50cb-4840-8e33-97559e0274a6
+ceTaskUrl=http://localhost:9000/api/ce/task?id=d436da76-50cb-4840-8e33-97559e0274a6
