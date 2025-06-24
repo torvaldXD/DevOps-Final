@@ -57,4 +57,20 @@ describe('AppCard', () => {
     expect(screen.getByText(/Cargando Pokémon.../i)).toBeInTheDocument();
   });
 
+  it('maneja error en la petición', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    axios.get.mockRejectedValueOnce(new Error('Error de red'));
+
+    render(<AppCard pokemonName="bulbasaur" />);
+    expect(screen.getByText(/Cargando Pokémon.../i)).toBeInTheDocument();
+
+    await waitFor(() =>
+      expect(axios.get).toHaveBeenCalledWith(
+        'https://pokeapi.co/api/v2/pokemon/bulbasaur'
+      )
+    );
+
+    console.error.mockRestore();
+  });
+  
 });
