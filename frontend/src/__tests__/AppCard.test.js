@@ -56,4 +56,5 @@ describe('AppCard', () => {
     render(<AppCard pokemonName="charmander" />);
     expect(screen.getByText(/Cargando Pokémon.../i)).toBeInTheDocument();
   });
+
 });
