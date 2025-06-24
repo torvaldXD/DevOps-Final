@@ -17,14 +17,13 @@ const AppCard = ({pokemonName}) => {
     }, [pokemonName]);
 
     // Evitar render hasta que los datos estén listos
-    if (!pokemon || !pokemon.name || !pokemon.abilities) {
+    if (!pokemon || !pokemon.name || !pokemon.abilities || !pokemon.sprites) {
       return <p>Cargando Pokémon...</p>;
     }
 
-
     return (
         <Card style={{ width: '18rem' }}>
-        <Card.Img variant="top" src={pokemon.sprites.front_default} alt={pokemon.name} />
+        <Card.Img variant="top" src={pokemon.sprites.front_default || undefined} alt={pokemon.name} />
         <Card.Body>
             <Card.Title style={{ textTransform: 'capitalize' }}>{pokemon.name}</Card.Title>
             <Card.Subtitle className="mb-2 text-muted">Habilidades:</Card.Subtitle>
