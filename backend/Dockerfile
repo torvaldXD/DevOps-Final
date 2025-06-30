@@ -1,38 +1,32 @@
-# ========= ETAPA DE CONSTRUCCIÓN =========
-FROM node:23-alpine AS builder
+# Usar imagen base de Node.js
+FROM node:18-alpine
 
-WORKDIR /backend
-COPY backend/package.json backend/package-lock.json ./
-RUN npm ci
+# Establecer directorio de trabajo
+WORKDIR /app
 
-# ========= ETAPA DE DESARROLLO =========
-FROM node:23-alpine AS dev
+# Copiar package.json y package-lock.json
+COPY package*.json ./
 
-WORKDIR /backend
-COPY --from=builder backend/node_modules ./node_modules
-COPY backend/. .
+# Instalar dependencias de producción
+RUN npm ci --only=production && npm cache clean --force
 
-# Instala herramientas para esperar a MySQL
-RUN apk add --no-cache mysql-client
+# Copiar código fuente
+COPY . .
 
-ENV NODE_ENV=development
-ENV PORT=3005
+# Crear usuario no-root para seguridad
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S backend -u 1001
+
+# Cambiar propiedad de archivos
+RUN chown -R backend:nodejs /app
+USER backend
+
+# Exponer puerto
 EXPOSE 3005
 
-CMD ["node", "src/wait-for-mysql.js"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3005/health || exit 1
 
-# ========= ETAPA DE PRODUCCIÓN =========
-# FROM node:23-alpine AS production
-
-# WORKDIR /backend
-# COPY --from=builder /backend/node_modules ./node_modules
-# COPY . .
-
-# # Instala solo lo necesario para esperar MySQL
-# RUN apk add --no-cache mysql-client
-
-# ENV NODE_ENV=production
-# ENV PORT=3005
-# EXPOSE 3005
-
-# CMD ["sh", "-c", "./scripts/wait-for-mysql.sh mysql root 12345 pokedex node src/index.js"]
+# Comando para ejecutar la aplicación
+CMD ["npm", "start"]
