@@ -6,7 +6,8 @@
     "dev": "nodemon src/index.js",
     "test": "jest --coverage",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "sonar": "sonar-scanner"
   },
   "keywords": [],
   "author": "",
@@ -33,6 +34,7 @@
     "eslint-plugin-node": "^11.1.0",
     "jest": "^29.7.0",
     "nodemon": "^3.1.4",
+    "sonarqube-scanner": "^4.3.0",
     "supertest": "^7.0.0"
   }
 }
