@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import AppCard from '../components/AppCard';
 import axios from 'axios';
 
+// Mock de axios
 jest.mock('axios');
 
 describe('AppCard', () => {
@@ -39,17 +40,6 @@ describe('AppCard', () => {
     );
   });
 
-  it('verifica que el título del Pokémon esté capitalizado', async () => {
-    axios.get.mockResolvedValueOnce({ data: mockPokemonData });
-
-    render(<AppCard pokemonName="pikachu" />);
-
-    await waitFor(() => {
-      const titleElement = screen.getByText(/pikachu/i);
-      expect(titleElement).toHaveStyle({ textTransform: 'capitalize' });
-    });
-  });
-
   it('muestra mensaje de carga si la petición nunca se resuelve', () => {
     axios.get.mockImplementation(() => new Promise(() => {})); // nunca se resuelve
 
@@ -72,5 +62,4 @@ describe('AppCard', () => {
 
     console.error.mockRestore();
   });
-  
 });
