@@ -38,6 +38,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./backend
+        file: ./backend/Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_REPOSITORY }}:blue-${{ github.sha }}
         cache-from: type=gha
@@ -49,6 +50,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./backend
+        file: ./backend/Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_REPOSITORY }}:green-${{ github.sha }}
         cache-from: type=gha
