@@ -19,7 +19,7 @@ function validateLoginData(req, res, next) {
     });
   }
 
-  // Asignar los valores validados al request
+  // Asignar los valores validados al requests
   req.validatedData = value;
   return next();
 }
