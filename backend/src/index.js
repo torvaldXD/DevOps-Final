@@ -3,6 +3,8 @@ const express = require('express');
 const morgan = require('morgan');
 const config = require('./config/config');
 const { testConnection } = require('./config/sequelize');
+const authRoutes = require('./routes/authRoutes');
+const pokemonRoutes = require('./routes/pokemonRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 const app = express();
@@ -18,6 +20,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/pokemon', pokemonRoutes);
 
 async function startServer() {
   await testConnection();

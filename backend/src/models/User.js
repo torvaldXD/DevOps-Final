@@ -28,10 +28,6 @@ const User = sequelize.define(
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        len: [6, 50],
-        is: /^[a-zA-Z0-9]{8,30}$/,
-      },
     },
     role: {
       type: DataTypes.ENUM('user', 'admin'),
